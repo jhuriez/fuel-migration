@@ -9,9 +9,9 @@
 <hr>
 
 <ul class="nav nav-tabs">
-    <li class="active"><a href="#app" data-toggle="tab">App</a></li>
-    <li><a href="#module" data-toggle="tab">Modules</a></li>
-    <li><a href="#package" data-toggle="tab">Packages</a></li>
+    <?php if(isset($migrationsVar['app'])): ?><li class="active"><a href="#app" data-toggle="tab">App</a></li><?php endif; ?>
+    <?php if(isset($migrationsVar['module'])): ?><li><a href="#module" data-toggle="tab">Modules</a></li><?php endif; ?>
+    <?php if(isset($migrationsVar['package'])): ?><li><a href="#package" data-toggle="tab">Packages</a></li><?php endif; ?>
 </ul>
 
 <div class="tab-content">
