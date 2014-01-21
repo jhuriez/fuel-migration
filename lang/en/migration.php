@@ -10,6 +10,7 @@ return array(
 
         'rollback' => 'Rollback to this version',
         'migrate' => 'Migrate to this version',
+        'conflict' => 'Conflict between config file and migration table',
 
         'message' => array(
             'success' => array(

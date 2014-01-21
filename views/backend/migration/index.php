@@ -44,7 +44,9 @@
                     <td><?= $version; ?></td>
                     <td><?= $migration['file']; ?></td>
                     <td>
-                        <?php if($migration['done']): ?>
+                        <?php if($migration['conflict']): ?>
+                          <a href="#" class="btn btn-danger"><?= __('migration.migration.conflict'); ?></a>
+                        <?php elseif($migration['done']): ?>
                           <a href="<?= \Router::get('migration_backend_migration_migrate', array('migration' => $version.'_'.$type.'_'.$name)); ?>" class="btn btn-warning"><?= __('migration.migration.rollback'); ?></a>
                         <?php else: ?>
                           <a href="<?= \Router::get('migration_backend_migration_migrate', array('migration' => $version.'_'.$type.'_'.$name)); ?>" class="btn btn-success"><?= __('migration.migration.migrate'); ?></a>

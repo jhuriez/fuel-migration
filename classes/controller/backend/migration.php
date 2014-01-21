@@ -82,6 +82,8 @@ class Controller_Backend_Migration extends \Migration\Controller_Backend
 
             $migrations['module'][$migration[1]][$fileName[0]]['file'] = $migration[3];
             $migrations['module'][$migration[1]][$fileName[0]]['done'] = $this->verifyMigrationAlreadyDone('module', $migration[1], $migration[3]);
+            $migrations['module'][$migration[1]][$fileName[0]]['conflict'] = $this->verifyMigrationConflict('module', $migration[1], $migration[3], $migrations['module'][$migration[1]][$fileName[0]]['done']);
+
         }
 
 		// loop through packages to find migrations
@@ -95,6 +97,8 @@ class Controller_Backend_Migration extends \Migration\Controller_Backend
 
             $migrations['package'][$migration[1]][$fileName[0]]['file'] = $migration[3];
             $migrations['package'][$migration[1]][$fileName[0]]['done'] = $this->verifyMigrationAlreadyDone('package', $migration[1], $migration[3]);
+            $migrations['package'][$migration[1]][$fileName[0]]['conflict'] = $this->verifyMigrationConflict('package', $migration[1], $migration[3], $migrations['package'][$migration[1]][$fileName[0]]['done']);
+
         }
 
         // loop through app to find migrations
@@ -107,6 +111,8 @@ class Controller_Backend_Migration extends \Migration\Controller_Backend
             $fileName = explode('_', $migration[1]);
             $migrations['app']['default'][$fileName[0]]['file'] = $migration[1];
             $migrations['app']['default'][$fileName[0]]['done'] = $this->verifyMigrationAlreadyDone('app', 'default', $migration[1]);
+            $migrations['app']['default'][$fileName[0]]['conflict'] = $this->verifyMigrationConflict('app', 'default', $migration[1], $migrations['app']['default'][$fileName[0]]['done']);
+            
         }
         return $migrations;
 	}
@@ -119,6 +125,22 @@ class Controller_Backend_Migration extends \Migration\Controller_Backend
 	{
 		$exist = \DB::select('migration')->from(\Config::get('migrations.table'))->where('type', $type)->and_where('name', $name)->and_where('migration', $migration)->execute();
 		return (count($exist) > 0);
+	}
+
+	/**
+	 * Verify if conflict in migration config file and in migration table
+	 * @param  [type] $type        [description]
+	 * @param  [type] $name        [description]
+	 * @param  [type] $migration   [description]
+	 * @param  [type] $alreadyDone [description]
+	 * @return [type]              [description]
+	 */
+	public function verifyMigrationConflict($type, $name, $migration, $alreadyDone)
+	{
+		$migrationConfig = \Config::get('migrations.version');
+		$inConfig = (isset($migrationConfig[$type][$name]) && in_array($migration, $migrationConfig[$type][$name])) ? true : false;
+
+		return ($inConfig != $alreadyDone);
 	}
 
 }
