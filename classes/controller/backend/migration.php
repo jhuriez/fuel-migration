@@ -9,9 +9,8 @@ class Controller_Backend_Migration extends \Migration\Controller_Backend
 	 */
 	public function action_index()
 	{
-		$data['migrationsVar'] = $this->getMigrationsAvailable();		
-        $view = \Theme::instance($this->moduleName)->view('migration::backend/migration/index', $data);
-        \Theme::instance($this->moduleName)->set_partial('content', $view);
+		$migrations = $this->getMigrationsAvailable();	
+        \Theme::instance($this->module)->set_partial('content', 'backend/migration/index')->set('migrationsVar', $migrations);
 	}
 
 	/**

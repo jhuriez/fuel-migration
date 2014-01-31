@@ -1,1 +1,1 @@
-404 Error
+<?= $notfound_title; ?>

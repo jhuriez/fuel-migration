@@ -8,8 +8,8 @@
 
         <title>Backend for module Migration</title>
 
-        <?= \Asset::render('layout'); ?>
-        <?= \Asset::render('js_top'); ?>
+        <?= \Theme::instance($moduleName)->asset->render('layout'); ?>
+        <?= \Theme::instance($moduleName)->asset->render('js_top'); ?>
     </head>
 
     <body>
@@ -32,7 +32,7 @@
 
         <div class="container">
 
-            <?php if($dataGlobal['use_message'] && \Messages::any()): ?>
+            <?php if($use_message && \Messages::any()): ?>
                 <?php foreach(array('info', 'success', 'warning', 'error') as $type): ?>
                     <?php foreach (\Messages::instance()->get($type) as $message): ?>
                         <div class="alert alert-<?= $message['type']; ?>"><?= $message['body']; ?></div>
@@ -49,6 +49,6 @@
             <?php endif; ?>
         </div><!-- /.container -->
 
-        <?= \Asset::render('js_footer'); ?>
+        <?= \Theme::instance($moduleName)->asset->render('js_footer'); ?>
     </body>
 </html>
