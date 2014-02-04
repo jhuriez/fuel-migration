@@ -71,34 +71,40 @@ class Controller_Backend_Migration extends \Migration\Controller_Backend
 
 		$migrations = array();
 		// loop through modules to find migrations
-        foreach (glob(APPPATH.'..'.DS.'modules'.DS.'*'.DS.\Config::get('migrations.folder').'*_*.php') as $migration)
-        {
-            // Convert path to array
-        	$migration = str_replace(array('/', '\\'), DS, $migration);
-            $migration = substr($migration, 0, strlen($migration)-4);
-            $migration = explode(DS, substr($migration, strlen(APPPATH)+3));
-            $fileName = explode('_', $migration[3]);
+		foreach(\Config::get('module_paths') as $modulePath)
+		{
+	        foreach (glob($modulePath.'*'.DS.\Config::get('migrations.folder').'*_*.php') as $migration)
+	        {
+	            // Convert path to array
+	        	$migration = str_replace(array('/', '\\'), DS, $migration);
+	            $migration = substr($migration, 0, strlen($migration)-4);
+	            $migration = explode(DS, substr($migration, strlen(APPPATH)+3));
+	            $fileName = explode('_', $migration[3]);
 
-            $migrations['module'][$migration[1]][$fileName[0]]['file'] = $migration[3];
-            $migrations['module'][$migration[1]][$fileName[0]]['done'] = $this->verifyMigrationAlreadyDone('module', $migration[1], $migration[3]);
-            $migrations['module'][$migration[1]][$fileName[0]]['conflict'] = $this->verifyMigrationConflict('module', $migration[1], $migration[3], $migrations['module'][$migration[1]][$fileName[0]]['done']);
+	            $migrations['module'][$migration[1]][$fileName[0]]['file'] = $migration[3];
+	            $migrations['module'][$migration[1]][$fileName[0]]['done'] = $this->verifyMigrationAlreadyDone('module', $migration[1], $migration[3]);
+	            $migrations['module'][$migration[1]][$fileName[0]]['conflict'] = $this->verifyMigrationConflict('module', $migration[1], $migration[3], $migrations['module'][$migration[1]][$fileName[0]]['done']);
 
-        }
+	        }
+		}
 
 		// loop through packages to find migrations
-        foreach (glob(APPPATH.'..'.DS.'packages'.DS.'*'.DS.\Config::get('migrations.folder').'*_*.php') as $migration)
-        {
-            // Convert path to array
-        	$migration = str_replace(array('/', '\\'), DS, $migration);
-            $migration = substr($migration, 0, strlen($migration)-4);
-            $migration = explode(DS, substr($migration, strlen(APPPATH)+3));
-            $fileName = explode('_', $migration[3]);
+		foreach(\Config::get('package_paths') as $packagePath)
+		{
+	        foreach (glob($packagePath.'*'.DS.\Config::get('migrations.folder').'*_*.php') as $migration)
+	        {
+	            // Convert path to array
+	        	$migration = str_replace(array('/', '\\'), DS, $migration);
+	            $migration = substr($migration, 0, strlen($migration)-4);
+	            $migration = explode(DS, substr($migration, strlen(APPPATH)+3));
+	            $fileName = explode('_', $migration[3]);
 
-            $migrations['package'][$migration[1]][$fileName[0]]['file'] = $migration[3];
-            $migrations['package'][$migration[1]][$fileName[0]]['done'] = $this->verifyMigrationAlreadyDone('package', $migration[1], $migration[3]);
-            $migrations['package'][$migration[1]][$fileName[0]]['conflict'] = $this->verifyMigrationConflict('package', $migration[1], $migration[3], $migrations['package'][$migration[1]][$fileName[0]]['done']);
+	            $migrations['package'][$migration[1]][$fileName[0]]['file'] = $migration[3];
+	            $migrations['package'][$migration[1]][$fileName[0]]['done'] = $this->verifyMigrationAlreadyDone('package', $migration[1], $migration[3]);
+	            $migrations['package'][$migration[1]][$fileName[0]]['conflict'] = $this->verifyMigrationConflict('package', $migration[1], $migration[3], $migrations['package'][$migration[1]][$fileName[0]]['done']);
 
-        }
+	        }
+		}
 
         // loop through app to find migrations
         foreach (glob(APPPATH.\Config::get('migrations.folder').'*_*.php') as $migration)
