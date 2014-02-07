@@ -16,7 +16,7 @@ It contains
 
 ## Usage
 
-Access the backoffice at http://<your-fuel-url>/migration/backend
+Access the backoffice at http://your-fuel-url/migration/backend
 
 Warning: This module is not securised, i've not added a ACL or Auth security. 
 You need to do it, or you can copy/extend this module.
