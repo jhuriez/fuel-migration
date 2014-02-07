@@ -24,11 +24,11 @@ You need to do it, or you can copy/extends this module.
 ## Error :
 
 - Fuel\Core\ThemeException [ Error ]: Theme "default" could not be found.
-It's because this module use Theme for better flexibility. You must create a theme folder, by default it's APPPATH/themes/default. And refresh!
+It's because this module use Theme for better flexibility. You must create a theme folder, by default it's DOCROOT/themes/default. And refresh!
 
 ## Override Theme
 
 You can use your own theme :
 
-* For override the template : APPPATH/themes/<theme>/migration/template.php
-* For override the index view : APPPATH/themes/<theme>/migration/backend/migration/index.php 
+* For override the template : DOCROOT/themes/<theme>/migration/template.php
+* For override the index view : DOCROOT/themes/<theme>/migration/backend/migration/index.php 
