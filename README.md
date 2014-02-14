@@ -9,10 +9,10 @@ It contains
 
 1. This module uses Theme class, you must create your theme folder.
 1. Clone or download the fuel-migration repository
-2. Move it into your modules folder
+2. Move it into your modules folder, and rename it to "migration"
 3. Add 'migration' to the 'always_load.modules' array in app/config/config.php.
 4. Open your oil console
-5. Run 'refine migrate --modules=migration' to generate needed files (copy js and css files in assets folder)
+5. Run 'oil refine migration::migration:install' to generate needed files (copy js and css files in assets folder)
 
 ## Usage
 
