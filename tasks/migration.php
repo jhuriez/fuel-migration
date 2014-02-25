@@ -23,7 +23,13 @@ class Migration
 
 	public function install($publicPath = null)
 	{
-		($publicPath !== null) and $this->publicPath = DOCROOT.DS.$publicPath;
+		if ($publicPath !== null)
+        {
+            $oldPublicPath = $this->publicPath;
+            $this->publicPath = DOCROOT.DS.$publicPath;
+            $this->assetJsPath = str_replace($oldPublicPath, $this->publicPath, $this->assetJsPath);
+            $this->assetCssPath = str_replace($oldPublicPath, $this->publicPath, $this->assetCssPath);
+        } 
 
         if (is_dir($this->publicPath)) {
             // Create dir
@@ -46,8 +52,14 @@ class Migration
 
     public function uninstall($publicPath = null)
     {
-		($publicPath !== null) and $this->publicPath = DOCROOT.DS.$publicPath;
-
+        if ($publicPath !== null)
+        {
+            $oldPublicPath = $this->publicPath;
+            $this->publicPath = DOCROOT.DS.$publicPath;
+            $this->assetJsPath = str_replace($oldPublicPath, $this->publicPath, $this->assetJsPath);
+            $this->assetCssPath = str_replace($oldPublicPath, $this->publicPath, $this->assetCssPath);
+        } 
+        
         if (is_dir($this->publicPath)) {
             is_dir($this->assetJsPath) and \File::delete_dir($this->assetJsPath, true);
             is_dir($this->assetCssPath) and \File::delete_dir($this->assetCssPath, true);
