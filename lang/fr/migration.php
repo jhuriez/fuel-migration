@@ -21,6 +21,10 @@ return array(
                 'current' => 'La migration du :type :name est passée sur la version actuelle',
                 'latest' => 'La migration du :type :name est passée sur la dernière version',
                 'version' => 'La migration du :type :name est passée à la version :version',
+                'sync' => 'La synchronisation s\'est faite avec succès',
+            ),
+            'error' => array(
+                'sync' => 'Une erreur s\'est produite lors de la synchronisation',
             ),
         ),
     ),
@@ -28,5 +32,9 @@ return array(
         'all' => 'Tout migrer',
         'all_current' => 'Tout migrer sur la version actuelle',
         'current' => 'Migrer sur la version actuelle',
-    )
+        'sync' => array(
+            'array_from_db' => 'Synchroniser Array venant de Db',
+            'db_from_array' => 'Synchroniser Db venant de Array',
+        ),
+    ),
 );

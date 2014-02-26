@@ -6,6 +6,10 @@
     <a href="<?= \Router::get('migration_backend_migration_migrate', array('migration' => 'all', 'type' => 'latest')); ?>" class="btn btn-primary"><?= __('migration.migrate.all'); ?></a>
     <a href="<?= \Router::get('migration_backend_migration_migrate', array('migration' => 'all', 'type' => 'current')); ?>" class="btn btn-info"><?= __('migration.migrate.all_current'); ?></a>
 
+    <div class="pull-right">
+      <a href="<?= \Router::get('migration_backend_migration_sync_array_from_db'); ?>" class="btn btn-danger"><?= __('migration.migrate.sync.array_from_db'); ?></a>
+      <a href="<?= \Router::get('migration_backend_migration_sync_db_from_array'); ?>" class="btn btn-danger"><?= __('migration.migrate.sync.db_from_array'); ?></a>
+    </div>
 <hr>
 
 <ul class="nav nav-tabs">
@@ -28,6 +32,7 @@
           <a href="<?= \Router::get('migration_backend_migration_migrate', array('migration' => $type.'_'.$name, 'type' => 'latest')); ?>" class="btn btn-primary"><?= __('migration.migrate.all'); ?></a>
           <a href="<?= \Router::get('migration_backend_migration_migrate', array('migration' => $type.'_'.$name, 'type' => 'current')); ?>" class="btn btn-info"><?= __('migration.migrate.current'); ?></a>
         </div>
+
 
         <table class="table table-striped" id="migration-table">
             <thead>

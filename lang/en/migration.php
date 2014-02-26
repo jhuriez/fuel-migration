@@ -21,6 +21,10 @@ return array(
                 'current' => 'Migration :type :name is now on the current version',
                 'latest' => 'Migration :type :name is now on the latest version',
                 'version' => 'Migration :type :name is now on the version :version',
+                'sync' => 'Sync done',
+            ),
+            'error' => array(
+                'sync' => 'Sync failed',
             ),
         ),
     ),
@@ -28,5 +32,9 @@ return array(
         'all' => 'Migrate all',
         'all_current' => 'Migrate all on the current version',
         'current' => 'Migrate all on the current version',
+        'sync' => array(
+            'array_from_db' => 'Sync array from db',
+            'db_from_array' => 'Sync db from array',
+        ),
     )
 );

@@ -62,6 +62,72 @@ class Controller_Backend_Migration extends \Migration\Controller_Backend
 	}
 
 	/**
+	 * Sync Db Migration from Array
+	 */
+	public function action_syncdb()
+	{
+		\Config::load('migrations', true);
+		$migrationsConfig = \Config::get('migrations.version');
+		foreach((array)$migrationsConfig as $type => $types)
+		{
+			foreach((array)$types as $name => $names)
+			{
+				foreach((array)$names as $migration)
+				{
+					if (!$this->verifyMigrationAlreadyDone($type, $name, $migration))
+					{
+						// Insert in Db
+						\DB::insert(\Config::get('migrations.table'))->set(array('type' => $type, 'name' => $name, 'migration' => $migration))->execute();
+					}
+				}
+			}
+		}
+		$this->use_message and \Messages::success(__('migration.migration.message.success.sync'));
+		\Response::redirect_back(\Router::get('migration_backend_migration'));
+
+	}
+
+	/**
+	 * Sync Array from Db
+	 */
+	public function action_syncarray()
+	{
+		\Config::load('migrations', true, true);
+		$migrationsDb = \DB::select('type', 'name', 'migration')->from(\Config::get('migrations.table'))->execute()->as_array();
+		foreach($migrationsDb as $migrationArr)
+		{
+			$path = 'migrations.version.'.$migrationArr['type'].'.'.$migrationArr['name'];
+			$migrationsList = (\Config::get($path) !== null) ? \Config::get($path) : array();
+
+			if (!in_array($migrationArr['migration'], $migrationsList))
+			{
+				// Migration Array exist
+				if (\Config::get($path) !== null)
+				{
+					$migrations = \Config::get($path);
+					$migrations[] = $migrationArr['migration'];
+					\Config::set($path, $migrations);
+				}
+				else
+				{
+					\Config::set($path, array($migrationArr['migration']));
+				}
+			}
+		}	
+
+		if (\Config::save(\Fuel::$env.'/migrations', 'migrations'))
+		{
+			$this->use_message and \Messages::success(__('migration.migration.message.success.sync'));
+		}
+		else
+		{
+			$this->use_message and \Messages::success(__('migration.migration.message.error.sync'));
+		}
+		\Response::redirect_back(\Router::get('migration_backend_migration'));
+
+	}
+
+	/**
 	 * For get all migrations available
 	 * @return array
 	 */
@@ -143,7 +209,7 @@ class Controller_Backend_Migration extends \Migration\Controller_Backend
 	public function verifyMigrationConflict($type, $name, $migration, $alreadyDone)
 	{
 		$migrationConfig = \Config::get('migrations.version');
-		$inConfig = (isset($migrationConfig[$type][$name]) && in_array($migration, $migrationConfig[$type][$name])) ? true : false;
+		$inConfig = (isset($migrationConfig[$type][$name]) && is_array($migrationConfig[$type][$name]) && in_array($migration, $migrationConfig[$type][$name])) ? true : false;
 
 		return ($inConfig != $alreadyDone);
 	}
