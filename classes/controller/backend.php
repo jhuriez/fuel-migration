@@ -2,7 +2,7 @@
 
 namespace Migration;
 
-class Controller_Backend extends \Controller_Base_Backenddd
+class Controller_Backend extends \Controller_Base_Backend
 {
     public $module = 'migration';
     public $dataGlobal = array();
