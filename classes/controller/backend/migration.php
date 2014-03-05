@@ -10,7 +10,7 @@ class Controller_Backend_Migration extends \Migration\Controller_Backend
 	public function action_index()
 	{
 		$migrations = $this->getMigrationsAvailable();	
-        \Theme::instance($this->module)->set_partial('content', 'backend/migration/index')->set('migrationsVar', $migrations);
+        $this->theme->set_partial('content', 'backend/migration/index')->set('migrationsVar', $migrations);
 	}
 
 	/**

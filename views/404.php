@@ -1,1 +1,0 @@
-<?= $notfound_title; ?>

@@ -2,22 +2,12 @@
 
 namespace Migration;
 
-class Controller_Backend extends \Controller_Hybrid
+class Controller_Backend extends \Controller_Base_Backenddd
 {
     public $module = 'migration';
-    public $template = 'template';
     public $dataGlobal = array();
 
     public function before() {
-        // Theme config
-        \Config::load('theme', true, false, true);
-        $config = \Config::get('theme');
-        $config['view_ext'] = '.php';
-
-        // Set template 
-        $this->theme = \Theme::instance($this->module, $config);
-        $this->theme->set_template($this->template)->set('moduleName', $this->module);
-
         if (\Input::is_ajax())
         {
             return parent::before();
@@ -30,47 +20,39 @@ class Controller_Backend extends \Controller_Hybrid
         // Load language
         \Lang::load('migration', true);
         
+        // Load config
+        \Config::load('migration', true);
+
         // Message class exist ?
-        $this->dataGlobal['use_message'] = $this->use_message = class_exists('\Messages');
+        $this->use_message = class_exists('\Messages');
 
-        // Assets
-        $this->theme->asset->css(array(
-            'modules/'.$this->module.'/bootstrap/css/bootstrap.css',
-            'modules/'.$this->module.'/bootstrap/css/bootstrap-glyphicons.css',
-            'modules/'.$this->module.'/layout.css',
-            ), array(), 'layout', false);
-        
-        $this->theme->asset->js(array(
-            'modules/'.$this->module.'/bootstrap.js',
-            ), array(), 'js_footer', false);
-        
-        $this->theme->asset->js(array(
-            'modules/'.$this->module.'/jquery.min.js',
-            'modules/'.$this->module.'/jquery-ui.min.js',
-            ), array(), 'js_top', false);
+        // Set Media
+        $this->setModuleMedia();
     }
     
-    public function action_404()
+
+    public function setModuleMedia()
     {
-        $messages = array('Uh Oh!', 'Huh ?');
-        $data['notfound_title'] = $messages[array_rand($messages)];
-        $this->theme->set_partial('content', '404')->set($data);
-    }
-    
-    public function after($response)
-    {
-        $this->theme->get_template()->set($this->dataGlobal);
-        // If nothing was returned set the theme instance as the response
-        if (empty($response))
+        // Jquery
+        if (\Config::get('migration.module.force_jquery'))
         {
-            $response = \Response::forge($this->theme);
+            $this->theme->asset->js(array(
+                'modules/' . $this->module . '/jquery.min.js',
+                'modules/' . $this->module . '/jquery-ui.min.js',
+            ), array(), \Config::get('migration.module.assets.js_core') ? : 'js_core', false); 
         }
 
-        if (!$response instanceof \Response)
+        // Bootstrap
+        if (\Config::get('migration.module.force_bootstrap'))
         {
-            $response = \Response::forge($response);
+            $this->theme->asset->css(array(
+                'modules/' . $this->module . '/bootstrap/css/bootstrap.css',
+                'modules/' . $this->module . '/bootstrap/css/bootstrap-glyphicons.css',
+            ), array(), \Config::get('migration.module.assets.css') ? : 'css_plugin', false);
+
+            $this->theme->asset->js(array(
+                'modules/' . $this->module . '/bootstrap.js',
+            ), array(), \Config::get('migration.module.assets.js_core') ? : 'js_core', false); 
         }
-        
-        return parent::after($response);
     }
 }

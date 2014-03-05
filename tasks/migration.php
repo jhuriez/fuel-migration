@@ -21,7 +21,7 @@ class Migration
     }
 
 
-	public function install($publicPath = null)
+	public function install($publicPath = null, $theme = null)
 	{
 		if ($publicPath !== null)
         {
@@ -30,6 +30,12 @@ class Migration
             $this->assetJsPath = str_replace($oldPublicPath, $this->publicPath, $this->assetJsPath);
             $this->assetCssPath = str_replace($oldPublicPath, $this->publicPath, $this->assetCssPath);
         } 
+
+        if ($theme !== null)
+        {
+            $this->assetJsPath = str_replace($this->activeTheme, $theme, $this->assetJsPath);
+            $this->assetCssPath = str_replace($this->activeTheme, $theme, $this->assetCssPath);
+        }
 
         if (is_dir($this->publicPath)) {
             // Create dir
@@ -50,7 +56,7 @@ class Migration
         }
 	}
 
-    public function uninstall($publicPath = null)
+    public function uninstall($publicPath = null, $theme = null)
     {
         if ($publicPath !== null)
         {
@@ -59,6 +65,12 @@ class Migration
             $this->assetJsPath = str_replace($oldPublicPath, $this->publicPath, $this->assetJsPath);
             $this->assetCssPath = str_replace($oldPublicPath, $this->publicPath, $this->assetCssPath);
         } 
+        
+        if ($theme !== null)
+        {
+            $this->assetJsPath = str_replace($this->activeTheme, $theme, $this->assetJsPath);
+            $this->assetCssPath = str_replace($this->activeTheme, $theme, $this->assetCssPath);
+        }
         
         if (is_dir($this->publicPath)) {
             is_dir($this->assetJsPath) and \File::delete_dir($this->assetJsPath, true);
