@@ -17,14 +17,17 @@ class Controller_Backend extends \Controller_Base_Backend
             parent::before();
         }
         
-        // Load language
-        \Lang::load('migration', true);
-        
         // Load config
         \Config::load('migration', true);
+        
+        // Load language
+        \Lang::load('migration', true);
 
         // Message class exist ?
         $this->use_message = class_exists('\Messages');
+
+        // Use Casset ?
+        $this->use_casset = \Config::get('migration.module.use_casset');
 
         // Set Media
         $this->setModuleMedia();
@@ -33,26 +36,46 @@ class Controller_Backend extends \Controller_Base_Backend
 
     public function setModuleMedia()
     {
+        if ($this->use_casset)
+        {
+            $activeTheme = $this->theme->active();
+            \Casset::add_path('theme', $activeTheme['asset_base']);
+        }
+        
         // Jquery
         if (\Config::get('migration.module.force_jquery'))
         {
-            $this->theme->asset->js(array(
+            $this->addAsset(array(
                 'modules/' . $this->module . '/jquery.min.js',
                 'modules/' . $this->module . '/jquery-ui.min.js',
-            ), array(), \Config::get('migration.module.assets.js_core') ? : 'js_core', false); 
+            ), 'js', 'js_core');
         }
 
         // Bootstrap
         if (\Config::get('migration.module.force_bootstrap'))
         {
-            $this->theme->asset->css(array(
+            $this->addAsset(array(
                 'modules/' . $this->module . '/bootstrap/css/bootstrap.css',
                 'modules/' . $this->module . '/bootstrap/css/bootstrap-glyphicons.css',
-            ), array(), \Config::get('migration.module.assets.css') ? : 'css_plugin', false);
+            ), 'css', 'css_plugin');
 
-            $this->theme->asset->js(array(
+            $this->addAsset(array(
                 'modules/' . $this->module . '/bootstrap.js',
-            ), array(), \Config::get('migration.module.assets.js_core') ? : 'js_core', false); 
+            ), 'js', 'js_core');
+        }
+    }
+
+    public function addAsset($files, $type, $group, $attr = array(), $raw = false)
+    {
+        $group = (\Config::get('migration.module.assets.'.$group) ? : $group);
+        if ($this->use_casset)
+        {
+            foreach((array)$files as $file)
+                \Casset::{$type}('theme::'.$file, false, $group);
+        }
+        else
+        {
+            $this->theme->asset->{$type}($files, $attr, $group, $raw);
         }
     }
 }
