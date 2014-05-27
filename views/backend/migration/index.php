@@ -1,5 +1,3 @@
-<h1><?= __('migration.migration.list'); ?></h1>
-<hr>
 <?php if (empty($migrationsVar)): ?>
     <?= __('migration.migration.empty'); ?>
 <?php else: ?>
